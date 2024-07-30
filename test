@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+# Copyright 2024 GlitchyByte
+# SPDX-License-Identifier: MIT-0
+
+# Test project.
+
+# [Setup]
+set -u # Exit with an error if a variable is used without being set.
+set -e # Exit if any command returns an error.
+# Capture caller directory and script directory.
+readonly calling_dir="${PWD}"
+readonly script_dir="$(cd "$(dirname "$0")" && pwd)"
+# Go to script directory and load utilities.
+cd "${script_dir}"
+. ./_gcolors
+
+# [Main]
+# Usage.
+printUsage() {
+  echo "Usage: test [--clean]"
+  cd "${calling_dir}"
+  exit 1
+}
+
+# Check parameters.
+clean="no"
+while [[ "$#" -gt 0 ]]; do
+  case "$1" in
+    --clean)
+      clean="yes"
+      shift
+      ;;
+    *)
+      printUsage
+      ;;
+  esac
+done
+
+# Dir constants.
+readonly outDir="${PWD}/out"
+readonly buildConfigDir="${outDir}/test.cmake"
+readonly flavor="Debug"
+readonly testBin="gblib_test"
+
+# Clean if signaled.
+if [ "$clean" == "yes" ]; then
+  echo "${c_bold}${cf_black}Refreshing configuration...${c_reset}"
+  if [ -d "${outDir}" ]; then
+    rm -drf "${outDir}"
+  fi
+fi
+# Make sure out dir exists.
+if [ ! -d "${outDir}" ]; then
+  mkdir "${outDir}"
+fi
+
+# Go to tests.
+cd tests
+
+# Configure.
+echo "${c_bold}${cf_black}Configuring: ${cf_white}${flavor}${c_reset}"
+cmake -DCMAKE_BUILD_TYPE=${flavor} -B "${buildConfigDir}" -S .
+
+# Build.
+echo "${c_bold}${cf_black}Building: ${cf_white}${flavor}${c_reset}"
+cmake --build "${buildConfigDir}" --config ${flavor} --parallel
+
+# Test.
+echo "${c_bold}${cf_black}Testing: ${cf_white}${testBin}${c_reset}"
+"${buildConfigDir}/${testBin}"
+
+# [Teardown]
+cd "${calling_dir}"
+
+# Done!
+echo "${cf_green}${c_bold}Test done!${c_reset}"

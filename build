@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+# Copyright 2024 GlitchyByte
+# SPDX-License-Identifier: MIT-0
+
+# Build project.
+
+# [Setup]
+set -u # Exit with an error if a variable is used without being set.
+set -e # Exit if any command returns an error.
+# Capture caller directory and script directory.
+readonly calling_dir="${PWD}"
+readonly script_dir="$(cd "$(dirname "$0")" && pwd)"
+# Go to script directory and load utilities.
+cd "${script_dir}"
+. ./_gcolors
+
+# [Main]
+# Usage.
+printUsage() {
+  echo "Usage: build [--clean] [--install FULL_PATH_TO_INSTALL_PREFIX]"
+  cd "${calling_dir}"
+  exit 1
+}
+
+# Check parameters.
+clean="no"
+installPrefix=""
+while [[ "$#" -gt 0 ]]; do
+  case "$1" in
+    --clean)
+      clean="yes"
+      shift
+      ;;
+    --install)
+      if [[ -n "$2" && "$2" =~ ^/ ]]; then
+        installPrefix="$2"
+        shift 2
+      else
+        printUsage
+      fi
+      ;;
+    *)
+      printUsage
+      ;;
+  esac
+done
+
+# Dir constants.
+readonly outDir="${PWD}/out"
+readonly buildConfigDir="${outDir}/build.cmake"
+readonly flavor="Release"
+
+# Clean if signaled.
+if [ "$clean" == "yes" ]; then
+  echo "${c_bold}${cf_black}Refreshing configuration...${c_reset}"
+  if [ -d "${outDir}" ]; then
+    rm -dr "${outDir}"
+  fi
+fi
+# Make sure out dir exists.
+if [ ! -d "${outDir}" ]; then
+  mkdir "${outDir}"
+fi
+
+# Configure.
+echo "${c_bold}${cf_black}Configuring: ${cf_white}${flavor}${c_reset}"
+if [ -z "${installPrefix}" ]; then
+  cmake -DCMAKE_BUILD_TYPE=${flavor} -B "${buildConfigDir}" -S .
+else
+  cmake -DCMAKE_BUILD_TYPE=${flavor} --install-prefix "${installPrefix}" -B "${buildConfigDir}" -S .
+fi
+
+# Build.
+echo "${c_bold}${cf_black}Building: ${cf_white}${flavor}${c_reset}"
+cmake --build "${buildConfigDir}" --config ${flavor} --parallel
+
+# Install.
+if [ ! -z "${installPrefix}" ]; then
+  echo "${c_bold}${cf_black}Installing: ${cf_white}${flavor}${c_reset}"
+  # Remove macOS unwanted files.
+  find . -name ".DS_Store" -type f -delete
+  # cmake install.
+  cmake --install "${buildConfigDir}" --config ${flavor} --prefix "${installPrefix}"
+fi
+
+# [Teardown]
+cd "${calling_dir}"
+
+# Done!
+echo "${cf_green}${c_bold}Build done!${c_reset}"
