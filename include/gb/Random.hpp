@@ -9,12 +9,6 @@
 
 namespace gb {
 
-    template<typename T>
-    concept IntType = std::is_integral_v<T>;
-
-    template<typename T>
-    concept FloatType = std::is_floating_point_v<T>;
-
     /**
      * Random number function creator.
      *
@@ -33,7 +27,7 @@ namespace gb {
          * @tparam T Floating point type.
          * @return A function that generates random numbers in the range.
          */
-        template<FloatType T>
+        template<std::floating_point T>
         std::function<T()> createCanonicalGenerator() noexcept {
             return [=, this]() {
                 return std::generate_canonical<T>(engine);
@@ -48,7 +42,7 @@ namespace gb {
          * @param high Range high boundary, inclusive.
          * @return A function that generates random numbers in the range.
          */
-        template<IntType T>
+        template<std::integral T>
         std::function<T()> createIntGenerator(T const low, T const high) noexcept {
             return [=, this]() {
                 std::uniform_int_distribution<T> distribution { low, high };
@@ -64,7 +58,7 @@ namespace gb {
          * @param high Range high boundary, exclusive.
          * @return A function that generates random numbers in the range.
          */
-        template<FloatType T>
+        template<std::floating_point T>
         std::function<T()> createFloatGenerator(T const low, T const high) noexcept {
             return [=, this]() {
                 std::uniform_real_distribution<T> distribution { low, high };
