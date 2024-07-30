@@ -15,12 +15,31 @@ namespace gb {
     template<typename T>
     concept FloatType = std::is_floating_point_v<T>;
 
+    /**
+     * Random number function creator.
+     *
+     * @tparam TEngine Random number engine. (https://en.cppreference.com/w/cpp/numeric/random)
+     */
+    template<typename TEngine>
     class Random {
     private:
         std::random_device device;
-        std::mt19937 engine { device() };
+        TEngine engine { device() };
 
     public:
+        /**
+         * Creates a random number generator function that generates floating point numbers [0, 1).
+         *
+         * @tparam T Floating point type.
+         * @return A function that generates random numbers in the range.
+         */
+        template<FloatType T>
+        std::function<T()> createCanonicalGenerator() noexcept {
+            return [=, this]() {
+                return std::generate_canonical<T>(engine);
+            };
+        }
+
         /**
          * Creates a random number generator function that generates integer numbers [low, high].
          *
@@ -53,4 +72,14 @@ namespace gb {
             };
         }
     };
+
+    /**
+     * Random number function creator specialization with Mersenne Twister (32 bits) engine.
+     */
+    class RandomMT : public Random<std::mt19937> {};
+
+    /**
+     * Random number function creator specialization with Mersenne Twister (64 bits) engine.
+     */
+    class RandomMT64 : public Random<std::mt19937_64> {};
 }
