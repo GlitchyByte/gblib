@@ -19,5 +19,9 @@ FetchContent_MakeAvailable(gblib)
 
 # ...and in then add it to your `target_link_libraries`:
 
+# Must be PUBLIC or PRIVATE if it's a final binary.
 target_link_libraries(${PROJECT_NAME} PRIVATE gblib)
+
+# Must be INTERFACE if it's a library.
+target_link_libraries(${PROJECT_NAME} INTERFACE gblib)
 ```
