@@ -4,3 +4,4 @@
 #pragma once
 
 #include "gb/Random.hpp"
+#include "gb/strings.hpp"
