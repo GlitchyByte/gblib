@@ -10,8 +10,8 @@ TEST(Random, randomInt) {
     auto const generator { random.createIntGenerator<uint32_t>(10, 15) };
     for (int i = 0; i < 100; ++i) {
         uint32_t const value = generator();
-        EXPECT_GE(value, 10);
-        EXPECT_LE(value, 15);
+        ASSERT_GE(value, 10);
+        ASSERT_LE(value, 15);
     }
 }
 
@@ -21,8 +21,8 @@ TEST(Random, randomFloat) {
     auto const generator { random.createFloatGenerator<double_t>(15.0, 20.0) };
     for (int i = 0; i < 100; ++i) {
         double_t const value = generator();
-        EXPECT_GE(value, 15.0);
-        EXPECT_LT(value, 20.0);
+        ASSERT_GE(value, 15.0);
+        ASSERT_LT(value, 20.0);
     }
 }
 
@@ -32,8 +32,8 @@ TEST(Random, randomMtInt) {
     auto const generator { random.createIntGenerator<uint32_t>(10, 15) };
     for (int i = 0; i < 100; ++i) {
         uint32_t const value = generator();
-        EXPECT_GE(value, 10);
-        EXPECT_LE(value, 15);
+        ASSERT_GE(value, 10);
+        ASSERT_LE(value, 15);
     }
 }
 
@@ -43,8 +43,8 @@ TEST(Random, randomMtFloat) {
     auto const generator { random.createFloatGenerator<double_t>(15.0, 20.0) };
     for (int i = 0; i < 100; ++i) {
         double_t const value = generator();
-        EXPECT_GE(value, 15.0);
-        EXPECT_LT(value, 20.0);
+        ASSERT_GE(value, 15.0);
+        ASSERT_LT(value, 20.0);
     }
 }
 
@@ -54,8 +54,8 @@ TEST(Random, randomMt64Int) {
     auto const generator { random.createIntGenerator<uint32_t>(10, 15) };
     for (int i = 0; i < 100; ++i) {
         uint32_t const value = generator();
-        EXPECT_GE(value, 10);
-        EXPECT_LE(value, 15);
+        ASSERT_GE(value, 10);
+        ASSERT_LE(value, 15);
     }
 }
 
@@ -65,7 +65,7 @@ TEST(Random, randomMt64Float) {
     auto const generator { random.createFloatGenerator<double_t>(15.0, 20.0) };
     for (int i = 0; i < 100; ++i) {
         double_t const value = generator();
-        EXPECT_GE(value, 15.0);
-        EXPECT_LT(value, 20.0);
+        ASSERT_GE(value, 15.0);
+        ASSERT_LT(value, 20.0);
     }
 }
