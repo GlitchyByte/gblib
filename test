@@ -67,7 +67,7 @@ cmake --build "${buildConfigDir}" --config ${flavor} --parallel
 
 # Test.
 echo "${c_bold}${cf_black}Testing: ${cf_white}${testBin}${c_reset}"
-"${buildConfigDir}/${testBin}"
+"${buildConfigDir}/${testBin}" --gtest_brief=1
 
 # [Teardown]
 cd "${calling_dir}"
