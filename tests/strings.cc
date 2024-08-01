@@ -212,5 +212,5 @@ TEST(Strings, fromFloatingPoint_maxPrecision) {
     double_t const value = 1234567.8901;
     auto const str = gb::strings::fromFloatingPoint(value, gb::strings::MaxPrecision);
     double_t const roundTrip = std::stod(str);
-    ASSERT_EQ(roundTrip, 1234567.8901);
+    ASSERT_DOUBLE_EQ(roundTrip, 1234567.8901);
 }
