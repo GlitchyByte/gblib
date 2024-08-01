@@ -8,3 +8,5 @@
 #include "gb/terminal.hpp"
 #include "gb/Random.hpp"
 #include "gb/ShutdownMonitor.hpp"
+#include "gb/Task.hpp"
+#include "gb/TaskRunner.hpp"
