@@ -12,16 +12,16 @@ namespace gb::strings {
 
     /**
      * Converts a C string array into a vector of string_views.
-     * <p>
-     * The contents of the vector will be valid as long as the original array is valid.
-     * <p>
-     * This function is specifically designed to convert main function args into a string vector.
+     *
+     * <p>The contents of the vector will be valid as long as the original array is valid.
+     *
+     * <p>This function is specifically designed to convert main function args into a string vector.
      *
      * @param argc String array size.
      * @param argv Array of C strings.
      * @return A string vector of the arguments.
      */
-    inline std::vector<std::string_view> createVectorStringViewFromCArray(int const argc, char const* argv[]) noexcept {
+    constexpr inline std::vector<std::string_view> createVectorStringViewFromCArray(int const argc, char const* argv[]) noexcept {
         size_t const argsSize { static_cast<size_t>(argc) };
         std::vector<std::string_view> args { argsSize };
         for (size_t i = 0; i < argsSize; ++i) {
@@ -32,14 +32,14 @@ namespace gb::strings {
 
     /**
      * Converts a C string array into a vector of strings.
-     * <p>
-     * This function is specifically designed to convert main function args into a string vector.
+     *
+     * <p>This function is specifically designed to convert main function args into a string vector.
      *
      * @param argc String array size.
      * @param argv Array of C strings.
      * @return A string vector of the arguments.
      */
-    inline std::vector<std::string> createVectorStringFromCArray(int const argc, char const* argv[]) noexcept {
+    constexpr inline std::vector<std::string> createVectorStringFromCArray(int const argc, char const* argv[]) noexcept {
         size_t const argsSize { static_cast<size_t>(argc) };
         std::vector<std::string> args { argsSize };
         for (size_t i = 0; i < argsSize; ++i) {
@@ -50,8 +50,8 @@ namespace gb::strings {
 
     /**
      * Convenience replace of a token in a string.
-     * <p>
-     * This creates a new string, so it is only a shortcut, not efficient for replacing many tokens.
+     *
+     * <p>This creates a new string, so it is only a shortcut, not efficient for replacing many tokens.
      *
      * @param str String to search for token.
      * @param token Token to find.
@@ -59,7 +59,7 @@ namespace gb::strings {
      * @return The replaced string with the token replaced.
      */
     [[nodiscard]]
-    inline std::string replace(std::string_view const& str, std::string_view const& token, std::string_view const& value) noexcept {
+    constexpr inline std::string replace(std::string_view const& str, std::string_view const& token, std::string_view const& value) noexcept {
         size_t const pos = { str.find(token) };
         std::string newStr { str };
         if (pos == std::string::npos) {
@@ -70,15 +70,15 @@ namespace gb::strings {
 
     /**
      * Convenience replace of a token in a string.
-     * <p>
-     * This modifies the string,
+     *
+     * <p>This modifies the string,
      *
      * @param str String to search for token.
      * @param token Token to find.
      * @param value Value to replace the token with.
      * @return The replaced string with the token replaced.
      */
-    inline std::string& replaceInPlace(std::string& str, std::string_view const& token, std::string_view const& value) noexcept {
+    constexpr inline std::string& replaceInPlace(std::string& str, std::string_view const& token, std::string_view const& value) noexcept {
         size_t const pos = { str.find(token) };
         if (pos != std::string::npos) {
             return str.replace(pos, token.length(), value);
@@ -88,9 +88,9 @@ namespace gb::strings {
 
     /**
      * Splits a string by the delimiter into a vector of strings.
-     * <p>
-     * Storage is weak. Meaning, the resulting vector is actually pointing at sections in the original string.
-     * This is faster than regular split, but if the original string goes away, the contents of this
+     *
+     * <p>Storage is weak. Meaning, the resulting vector is actually pointing at sections in the original
+     * string. This is faster than regular split, but if the original string goes away, the contents of this
      * vector are not valid.
      *
      * @param str String to split.
@@ -98,7 +98,7 @@ namespace gb::strings {
      * @return A vector of strings.
      */
     [[nodiscard]]
-    inline std::vector<std::string_view> splitWeak(std::string_view const& str, std::string_view const& delimiter) noexcept {
+    constexpr inline std::vector<std::string_view> splitWeak(std::string_view const& str, std::string_view const& delimiter) noexcept {
         size_t const delimiterSize { delimiter.size() };
         size_t pos { str.find(delimiter) };
         if ((delimiterSize == 0) || (pos == std::string::npos)) {
@@ -123,7 +123,7 @@ namespace gb::strings {
      * @return A vector of strings.
      */
     [[nodiscard]]
-    inline std::vector<std::string> split(std::string_view const& str, std::string_view const& delimiter) noexcept {
+    constexpr inline std::vector<std::string> split(std::string_view const& str, std::string_view const& delimiter) noexcept {
         std::vector<std::string_view> const weak { std::move(splitWeak(str, delimiter)) };
         size_t const weakSize { weak.size() };
         std::vector<std::string> lines { weakSize };
@@ -136,12 +136,12 @@ namespace gb::strings {
     /**
      * Unindents a multiline block of text by removing all common spaces or tabs
      * from the beginning of the lines. Empty lines are left alone.
-     * <p>
-     * This function is specifically designed to use with raw string literals.
+     *
+     * <p>This function is specifically designed to use with raw string literals.
      * And it will remove indentation created to align the string with the rest
      * of the surrounding code.
-     * <p>
-     * Only spaces are considered when recognizing indentation.
+     *
+     * <p>Only spaces are considered when recognizing indentation.
      *
      * @param str String to unindent.
      * @return The unindented string.
@@ -195,7 +195,7 @@ namespace gb::strings {
 
     /**
      * Joins a string representation of all elements into a string.
-     * Each item is separate by a comma and a space.
+     * By default each item is separated by a comma and a space.
      *
      * @tparam T The type of item.
      * @param vector Vector of items to join.
@@ -224,7 +224,7 @@ namespace gb::strings {
      * @return The numeric representation with thousand separators.
      */
     [[nodiscard]]
-    inline std::string addThousandSeparators(std::string_view const& str) noexcept {
+    constexpr inline std::string addThousandSeparators(std::string_view const& str) noexcept {
         std::string number { str };
         size_t const period { number.find('.') };
         size_t const start { period == std::string::npos ? number.length() : period };
@@ -260,7 +260,7 @@ namespace gb::strings {
      * @return String representation of value.
      */
     template <std::integral T>
-    inline std::string fromIntegral(T const value, bool const withThousandSeparators = false) noexcept {
+    constexpr inline std::string fromIntegral(T const value, bool const withThousandSeparators = false) noexcept {
         std::string const str { std::to_string(value) };
         return withThousandSeparators ? addThousandSeparators(str) : str;
     }
