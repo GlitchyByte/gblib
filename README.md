@@ -9,6 +9,8 @@ Converting embedded gblib I was using in other projects to a header-only library
 
 Include in your `CMakeLists.txt`:
 ```cmake
+include(FetchContent)
+
 # GBLib.
 FetchContent_Declare(
     gblib
@@ -17,11 +19,11 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(gblib)
 
-# ...and in then add it to your `target_link_libraries`:
+# ...and then add it to your `target_link_libraries`:
 
-# Must be PUBLIC or PRIVATE if it's a final binary.
+# Use PUBLIC or PRIVATE if it's a final binary.
 target_link_libraries(${PROJECT_NAME} PRIVATE gblib)
 
-# Must be INTERFACE if it's a library.
+# Use INTERFACE if it's a library.
 target_link_libraries(${PROJECT_NAME} INTERFACE gblib)
 ```
