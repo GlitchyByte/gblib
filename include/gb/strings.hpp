@@ -4,7 +4,7 @@
 #pragma once
 
 #include <vector>
-#include <set>
+#include <unordered_set>
 #include <sstream>
 #include <iomanip>
 
@@ -159,7 +159,7 @@ namespace gb::strings {
         }
         // Find indentation size.
         size_t indent { std::string_view::npos };
-        std::set<size_t> emptyLines;
+        std::unordered_set<size_t> emptyLines;
         for (int i = 0; i < lines.size(); ++i) {
             auto const& line = lines[i];
             size_t const pos = line.find_first_not_of(' ');
