@@ -199,3 +199,12 @@ TEST(Strings, fromNumber_toNumber_floatingPoint) {
     auto const back = gb::strings::toNumber<double_t>(str);
     ASSERT_EQ(back, 1234567.8901);
 }
+
+TEST(Strings, toNumber_stringView) {
+    std::string_view const viewf { "1234567.8901" };
+    auto const valuef = gb::strings::toNumber<double_t>(viewf);
+    ASSERT_EQ(valuef, 1234567.8901);
+    std::string_view const viewi { "9871234567" };
+    auto const valuei = gb::strings::toNumber<int64_t>(viewi);
+    ASSERT_EQ(valuei, 9871234567);
+}

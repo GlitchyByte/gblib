@@ -330,4 +330,21 @@ namespace gb::strings {
         }
         return value;
     }
+
+    /**
+     * Converts a string_view to its number representation.
+     *
+     * <p>This is a convenience for when using string_views.
+     *
+     * @tparam T A numeric type.
+     * @param view A string view of the number.
+     * @return The parsed number value.
+     * @throws StringNumberParseException if the string can't be parsed to a numeric value.
+     */
+    template<Numeric T>
+    [[nodiscard]]
+    inline T toNumber(std::string_view const& view) {
+        std::string const str { view };
+        return toNumber<T>(str);
+    }
 }
