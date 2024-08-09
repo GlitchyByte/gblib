@@ -276,6 +276,7 @@ namespace gb::strings {
      * @return The string representation of value.
      */
     template <Numeric T>
+    [[nodiscard]]
     constexpr std::string fromNumber(T const value) noexcept {
         int const bufferSize = std::numeric_limits<T>::digits10 + 10; // Extra padding.
         char buffer[bufferSize] { 0 };
@@ -294,6 +295,7 @@ namespace gb::strings {
      * @throws StringNumberParseException if the string can't be parsed to an integral value.
      */
     template<std::integral T>
+    [[nodiscard]]
     inline T toNumber(std::string const& str) {
         auto const start { str.data() };
         auto const end { start + str.length() };
@@ -313,6 +315,7 @@ namespace gb::strings {
      * @throws StringNumberParseException if the string can't be parsed to a floating point value.
      */
     template<std::floating_point T>
+    [[nodiscard]]
     inline T toNumber(std::string const& str) {
         auto const start { str.data() };
         auto const end { start + str.length() };
