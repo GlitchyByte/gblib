@@ -166,51 +166,36 @@ TEST(Strings, fromTime) {
     ASSERT_EQ(str, " 9:17:08 PM");
 }
 
-TEST(Strings, fromIntegral) {
+TEST(Strings, fromNumber_integral) {
     int64_t const value = 1234567;
-    auto const str = gb::strings::fromIntegral(value);
+    auto const str = gb::strings::fromNumber(value);
     ASSERT_EQ(str, "1234567");
 }
 
-TEST(Strings, fromIntegral_negative) {
+TEST(Strings, fromNumber_integralNegative) {
     int64_t const value = -1234567;
-    auto const str = gb::strings::fromIntegral(value);
+    auto const str = gb::strings::fromNumber(value);
     ASSERT_EQ(str, "-1234567");
 }
 
-TEST(Strings, fromIntegral_withThousandSeparators) {
-    int64_t const value = 1234567;
-    auto const str = gb::strings::fromIntegral(value, true);
-    ASSERT_EQ(str, "1,234,567");
+TEST(Strings, fromNumber_toNumber_integral) {
+    int64_t const value = 9871234567;
+    auto const str = gb::strings::fromNumber(value);
+    ASSERT_EQ(str, "9871234567");
+    auto const back = gb::strings::toNumber<int64_t>(str);
+    ASSERT_EQ(back, 9871234567);
 }
 
-TEST(Strings, fromIntegral_negativeWithThousandSeparators) {
-    int64_t const value = -1234567;
-    auto const str = gb::strings::fromIntegral(value, true);
-    ASSERT_EQ(str, "-1,234,567");
-}
-
-TEST(Strings, fromFloatingPoint) {
+TEST(Strings, fromNumber_floatingPoint) {
     double_t const value = 1234567.8901;
-    auto const str = gb::strings::fromFloatingPoint(value, 3);
-    ASSERT_EQ(str, "1234567.890");
+    auto const str = gb::strings::fromNumber(value);
+    ASSERT_EQ(str, "1234567.8901");
 }
 
-TEST(Strings, fromFloatingPoint_withThousandSeparators) {
+TEST(Strings, fromNumber_toNumber_floatingPoint) {
     double_t const value = 1234567.8901;
-    auto const str = gb::strings::fromFloatingPoint(value, 3, true);
-    ASSERT_EQ(str, "1,234,567.890");
-}
-
-TEST(Strings, fromFloatingPoint_negativeWithThousandSeparators) {
-    double_t const value = -1234567.8901;
-    auto const str = gb::strings::fromFloatingPoint(value, 3, true);
-    ASSERT_EQ(str, "-1,234,567.890");
-}
-
-TEST(Strings, fromFloatingPoint_maxPrecision) {
-    double_t const value = 1234567.8901;
-    auto const str = gb::strings::fromFloatingPoint(value, gb::strings::MaxPrecision);
-    double_t const roundTrip = std::stod(str);
-    ASSERT_DOUBLE_EQ(roundTrip, 1234567.8901);
+    auto const str = gb::strings::fromNumber(value);
+    ASSERT_EQ(str, "1234567.8901");
+    auto const back = gb::strings::toNumber<double_t>(str);
+    ASSERT_EQ(back, 1234567.8901);
 }

@@ -5,8 +5,11 @@
 
 #include <vector>
 #include <unordered_set>
+#include <format>
+#include <charconv>
 #include <sstream>
 #include <iomanip>
+#include <stdexcept>
 
 namespace gb::strings {
 
@@ -252,52 +255,76 @@ namespace gb::strings {
     }
 
     /**
-     * Converts an integral value to a human representation.
-     *
-     * @tparam T Integer type.
-     * @param value Value.
-     * @param withThousandSeparators True to have thousand separators included in the string.
-     * @return String representation of value.
+     * String to number parse exception.
      */
-    template <std::integral T>
-    constexpr inline std::string fromIntegral(T const value, bool const withThousandSeparators = false) noexcept {
-        std::string const str { std::to_string(value) };
-        return withThousandSeparators ? addThousandSeparators(str) : str;
+    class StringNumberParseException : public std::runtime_error {
+    public:
+        explicit StringNumberParseException(std::string const& attempted) :
+            std::runtime_error(std::format("{}: string: \"{}\"", __func__, attempted)) {}
+    };
+
+    /**
+     * errc success constant.
+     */
+    constexpr std::errc errcSuccess {};
+
+    /**
+     * Converts a number value to a string representation.
+     *
+     * @tparam T A numeric type.
+     * @param value Number value.
+     * @return The string representation of value.
+     */
+    template <Numeric T>
+    constexpr std::string fromNumber(T const value) noexcept {
+        int const bufferSize = std::numeric_limits<T>::digits10 + 10; // Extra padding.
+        char buffer[bufferSize] { 0 };
+        auto const start { buffer };
+        auto const end { start + bufferSize };
+        std::to_chars(start, end, value);
+        return std::string { buffer };
     }
 
     /**
-     * fromFloatingPoint precision: Default precision for floating point values.
-     */
-    constexpr int DefaultPrecision { -1 };
-
-    /**
-     * fromFloatingPoint precision: Maximum precision for floating point values.
-     */
-    constexpr int MaxPrecision { -2 };
-
-    /**
-     * Converts a floating point value to a human representation.
+     * Converts a string to its number value representation.
      *
-     * @tparam T Floating point type.
-     * @param value Value.
-     * @param precision Number of decimals to show. Default shows all needed.
-     * @param withThousandSeparators True to have thousand separators included in the string.
-     * @return String representation of value.
+     * @tparam T An integral type.
+     * @param str A string.
+     * @return The parsed number value.
+     * @throws StringNumberParseException if the string can't be parsed to an integral value.
      */
-    template <std::floating_point T>
-    inline std::string fromFloatingPoint(T const value, int const precision = DefaultPrecision, bool const withThousandSeparators = false) noexcept {
-        std::string str;
-        if (precision == DefaultPrecision) {
-            str = std::to_string(value);
-        } else {
-            std::ostringstream ss;
-            if (precision == MaxPrecision) {
-                ss << std::fixed << std::setprecision(std::numeric_limits<T>::digits10 + 1) << value;
-            } else {
-                ss << std::fixed << std::setprecision(precision) << value;
-            }
-            str = ss.str();
+    template<std::integral T>
+    inline T toNumber(std::string const& str) {
+        auto const start { str.data() };
+        auto const end { start + str.length() };
+        T value;
+        if (auto const [ ptr, ec ] = std::from_chars(start, end, value); (ec != errcSuccess) || (ptr != end)) {
+            throw StringNumberParseException(str);
         }
-        return withThousandSeparators ? addThousandSeparators(str) : str;
+        return value;
+    }
+
+    /**
+     * Converts a string to its number value representation.
+     *
+     * @tparam T A floating point type.
+     * @param str A string.
+     * @return The parsed number value.
+     * @throws StringNumberParseException if the string can't be parsed to a floating point value.
+     */
+    template<std::floating_point T>
+    inline T toNumber(std::string const& str) {
+        auto const start { str.data() };
+        auto const end { start + str.length() };
+        if (start == end) {
+            throw StringNumberParseException(str);
+        }
+        char* pEnd;
+        errno = 0;
+        T const value = static_cast<T>(std::strtod(start, &pEnd));
+        if ((errno != 0) || (pEnd != end)) {
+            throw StringNumberParseException(str);
+        }
+        return value;
     }
 }

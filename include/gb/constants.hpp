@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace gb {
 
     /**
@@ -14,4 +16,7 @@ namespace gb {
      * True typed RValue. Normally used with atomic compares.
      */
     inline constinit bool _true { true };
+
+    template<typename T>
+    concept Numeric = std::integral<T> || std::floating_point<T>;
 }
