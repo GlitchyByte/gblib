@@ -29,8 +29,8 @@ namespace gb {
          */
         template<std::floating_point T>
         std::function<T()> createCanonicalGenerator() noexcept {
-            return [=, this]() {
-                return std::generate_canonical<T>(engine);
+            return [=, this]() noexcept {
+                return std::generate_canonical<T, std::numeric_limits<T>::digits>(engine);
             };
         }
 
@@ -44,7 +44,7 @@ namespace gb {
          */
         template<std::integral T>
         std::function<T()> createIntGenerator(T const low, T const high) noexcept {
-            return [=, this]() {
+            return [=, this]() noexcept {
                 std::uniform_int_distribution<T> distribution { low, high };
                 return distribution(engine);
             };
@@ -60,7 +60,7 @@ namespace gb {
          */
         template<std::floating_point T>
         std::function<T()> createFloatGenerator(T const low, T const high) noexcept {
-            return [=, this]() {
+            return [=, this]() noexcept {
                 std::uniform_real_distribution<T> distribution { low, high };
                 return distribution(engine);
             };
