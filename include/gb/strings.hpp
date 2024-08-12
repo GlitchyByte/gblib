@@ -62,10 +62,10 @@ namespace gb::strings {
      * @return The replaced string with the token replaced.
      */
     [[nodiscard]]
-    constexpr inline std::string replace(std::string_view const& str, std::string_view const& token, std::string_view const& value) noexcept {
+    constexpr inline std::string replace(std::string_view const str, std::string_view const token, std::string_view const value) noexcept {
         size_t const pos = { str.find(token) };
         std::string newStr { str };
-        if (pos == std::string::npos) {
+        if (pos == std::string_view::npos) {
             return newStr;
         }
         return newStr.replace(pos, token.length(), value);
@@ -81,7 +81,7 @@ namespace gb::strings {
      * @param value Value to replace the token with.
      * @return The replaced string with the token replaced.
      */
-    constexpr inline std::string& replaceInPlace(std::string& str, std::string_view const& token, std::string_view const& value) noexcept {
+    constexpr inline std::string& replaceInPlace(std::string& str, std::string_view const token, std::string_view const value) noexcept {
         size_t const pos = { str.find(token) };
         if (pos != std::string::npos) {
             return str.replace(pos, token.length(), value);
@@ -101,15 +101,15 @@ namespace gb::strings {
      * @return A vector of strings.
      */
     [[nodiscard]]
-    constexpr inline std::vector<std::string_view> splitWeak(std::string_view const& str, std::string_view const& delimiter) noexcept {
+    constexpr inline std::vector<std::string_view> splitWeak(std::string_view const str, std::string_view const delimiter) noexcept {
         size_t const delimiterSize { delimiter.size() };
         size_t pos { str.find(delimiter) };
-        if ((delimiterSize == 0) || (pos == std::string::npos)) {
+        if ((delimiterSize == 0) || (pos == std::string_view::npos)) {
             return std::vector<std::string_view> { str };
         }
         size_t start { 0 };
         std::vector<std::string_view> lines;
-        while (pos != std::string::npos) {
+        while (pos != std::string_view::npos) {
             lines.emplace_back(str.substr(start, pos - start));
             start = pos + delimiterSize;
             pos = str.find(delimiter, start);
@@ -150,7 +150,7 @@ namespace gb::strings {
      * @return The unindented string.
      */
     [[nodiscard]]
-    inline std::string unindent(std::string_view const& str) noexcept {
+    inline std::string unindent(std::string_view const str) noexcept {
         if (str.empty()) {
             return "";
         }
@@ -206,10 +206,10 @@ namespace gb::strings {
      */
     template <typename T>
     [[nodiscard]]
-    inline std::string fromVector(std::vector<T> const& vector, std::string_view const& separator = ", ") noexcept {
+    inline std::string fromVector(std::vector<T> const& vector, std::string_view const separator = ", ") noexcept {
         std::ostringstream ss;
         bool first { true };
-        for (const T& item: vector) {
+        for (T const& item: vector) {
             if (first) {
                 first = false;
             } else {
@@ -227,7 +227,7 @@ namespace gb::strings {
      * @return The numeric representation with thousand separators.
      */
     [[nodiscard]]
-    constexpr inline std::string addThousandSeparators(std::string_view const& str) noexcept {
+    constexpr inline std::string addThousandSeparators(std::string_view const str) noexcept {
         std::string number { str };
         size_t const period { number.find('.') };
         size_t const start { period == std::string::npos ? number.length() : period };
@@ -259,7 +259,7 @@ namespace gb::strings {
      */
     class StringNumberParseException : public std::runtime_error {
     public:
-        explicit StringNumberParseException(std::string const& attempted) :
+        explicit StringNumberParseException(std::string_view const attempted) :
             std::runtime_error(std::format("{}: string: \"{}\"", __func__, attempted)) {}
     };
 
@@ -296,7 +296,7 @@ namespace gb::strings {
      */
     template<std::integral T>
     [[nodiscard]]
-    inline T toNumber(std::string const& str) {
+    inline T toNumber(std::string_view const str) {
         auto const start { str.data() };
         auto const end { start + str.length() };
         T value;
@@ -316,35 +316,19 @@ namespace gb::strings {
      */
     template<std::floating_point T>
     [[nodiscard]]
-    inline T toNumber(std::string const& str) {
-        auto const start { str.data() };
-        auto const end { start + str.length() };
+    inline T toNumber(std::string_view const str) {
+        std::string const _str { str };
+        auto const start { _str.data() };
+        auto const end { start + _str.length() };
         if (start == end) {
-            throw StringNumberParseException(str);
+            throw StringNumberParseException(_str);
         }
         char* pEnd;
         errno = 0;
         T const value = static_cast<T>(std::strtod(start, &pEnd));
         if ((errno != 0) || (pEnd != end)) {
-            throw StringNumberParseException(str);
+            throw StringNumberParseException(_str);
         }
         return value;
-    }
-
-    /**
-     * Converts a string_view to its number representation.
-     *
-     * <p>This is a convenience for when using string_views.
-     *
-     * @tparam T A numeric type.
-     * @param view A string view of the number.
-     * @return The parsed number value.
-     * @throws StringNumberParseException if the string can't be parsed to a numeric value.
-     */
-    template<Numeric T>
-    [[nodiscard]]
-    inline T toNumber(std::string_view const& view) {
-        std::string const str { view };
-        return toNumber<T>(str);
     }
 }

@@ -4,6 +4,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <format>
 
 namespace gb {
 
@@ -75,8 +76,8 @@ namespace gb {
          * @param value Value.
          * @return This object.
          */
-        StringInterpolationVars& set(std::string const& name, std::string const& value) noexcept {
-            std::string const decoratedName { "${" + name + "}" };
+        StringInterpolationVars& set(std::string_view const name, std::string_view const value) noexcept {
+            std::string const decoratedName { std::format("${{{}}}", name) };
             vars[decoratedName] = value;
             return *this;
         }
@@ -88,7 +89,7 @@ namespace gb {
          * @return The interpolated string.
          */
         [[nodiscard]]
-        std::string interpolate(std::string_view const& str) const noexcept {
+        std::string interpolate(std::string_view const str) const noexcept {
             std::string interpolated { str };
             for (auto const& [ name, value ]: vars) {
                 size_t pos { interpolated.find(name) };

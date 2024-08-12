@@ -6,7 +6,7 @@
 #include "strings.hpp"
 #include <string>
 #include <cassert>
-#include <sstream>
+#include <format>
 
 namespace gb::terminal {
 
@@ -53,13 +53,11 @@ namespace gb::terminal {
      * @return The string in color.
      */
     [[nodiscard]]
-    inline std::string colorText(std::string_view const& str, color_t const color) noexcept {
+    constexpr std::string colorText(std::string_view const str, color_t const color) noexcept {
         if (str.empty()) {
             return "";
         }
         auto const startColor { gb::strings::replace(CSI_COLOR_FOREGROUND, CODE, std::to_string(color)) };
-        std::ostringstream ss;
-        ss << startColor << str << CSI_COLOR_RESET;
-        return ss.str();
+        return std::format("{}{}" CSI_COLOR_RESET, startColor, str);
     }
 }
