@@ -208,3 +208,26 @@ TEST(Strings, toNumber_stringView) {
     auto const valuei = gb::strings::toNumber<int64_t>(viewi);
     ASSERT_EQ(valuei, 9871234567);
 }
+
+TEST(Strings, hexFromNumber) {
+    int32_t const value = 1234567;
+    auto const str1 = gb::strings::hexFromNumber(value, false, false);
+    ASSERT_EQ(str1, "12d687");
+    auto const str2 = gb::strings::hexFromNumber(value, false, true);
+    ASSERT_EQ(str2, "12D687");
+    auto const str3 = gb::strings::hexFromNumber(value, true, false);
+    ASSERT_EQ(str3, "0012d687");
+    auto const str4 = gb::strings::hexFromNumber(value, true, true);
+    ASSERT_EQ(str4, "0012D687");
+}
+
+TEST(Strings, hexToNumber) {
+    auto const value1 = gb::strings::hexToNumber<int32_t>("12d687");
+    ASSERT_EQ(value1, 1234567);
+    auto const value2 = gb::strings::hexToNumber<int32_t>("12D687");
+    ASSERT_EQ(value2, 1234567);
+    auto const value3 = gb::strings::hexToNumber<int32_t>("0012d687");
+    ASSERT_EQ(value3, 1234567);
+    auto const value4 = gb::strings::hexToNumber<int32_t>("0012D687");
+    ASSERT_EQ(value4, 1234567);
+}

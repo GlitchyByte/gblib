@@ -331,4 +331,66 @@ namespace gb::strings {
         }
         return value;
     }
+
+    /**
+     * Converts a number value to a string hex representation.
+     *
+     * @tparam T An integral type.
+     * @param value Number value.
+     * @param padding If true, the representation will be padded with 0s to the extent of the type.
+     *          Default is false.
+     * @param uppercase If true, letters will be in uppercase. Default is false.
+     * @return The hex string representation of value.
+     */
+    template <std::integral T>
+    [[nodiscard]]
+    constexpr std::string hexFromNumber(T const value, bool const padding = false, bool const uppercase = false) noexcept {
+        auto const unsignedValue { static_cast<std::make_unsigned<T>::type>(value) };
+        auto const hexSize { sizeof(T) * 2 };
+        // FIXME: The following needs to be like this because std::format implementation is
+        //  incomplete on my system (macOS 08/14/2024).
+        if (uppercase) {
+            if (padding) {
+                switch (hexSize) {
+                    case 2: return std::format("{:02X}", unsignedValue);
+                    case 4: return std::format("{:04X}", unsignedValue);
+                    case 8: return std::format("{:08X}", unsignedValue);
+                    default: return std::format("{:016X}", unsignedValue);
+                }
+            } else {
+                return std::format("{:X}", unsignedValue);
+            }
+        } else {
+            if (padding) {
+                switch (hexSize) {
+                    case 2: return std::format("{:02x}", unsignedValue);
+                    case 4: return std::format("{:04x}", unsignedValue);
+                    case 8: return std::format("{:08x}", unsignedValue);
+                    default: return std::format("{:016x}", unsignedValue);
+                }
+            } else {
+                return std::format("{:x}", unsignedValue);
+            }
+        }
+    }
+
+    /**
+     * Converts a hex string to its number value representation.
+     *
+     * @tparam T An integral type.
+     * @param str A hex string.
+     * @return The parsed number value.
+     * @throws StringNumberParseException if the hex string can't be parsed to an integral value.
+     */
+    template <std::integral T>
+    [[nodiscard]]
+    inline T hexToNumber(std::string_view const str) {
+        auto const start { str.data() };
+        auto const end { start + str.length() };
+        T value;
+        if (auto const [ ptr, ec ] = std::from_chars(start, end, value, 16); (ec != errcSuccess) || (ptr != end)) {
+            throw StringNumberParseException(str);
+        }
+        return value;
+    }
 }
