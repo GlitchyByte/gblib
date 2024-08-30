@@ -111,3 +111,13 @@ TEST(Random, randomMt64Float_range) {
         ASSERT_LT(value, 20.0);
     }
 }
+
+TEST(Random, randomItemFromVector) {
+    gb::RandomMT64 random;
+    std::vector<std::string> vector { "one", "two", "three", "four" };
+    std::unordered_set<std::string> const values { vector.cbegin(), vector.cend() };
+    for (int i = 0; i < 100; ++i) {
+        auto const& item { random.pickFromVector(vector) };
+        ASSERT_TRUE(values.contains(item));
+    }
+}

@@ -65,6 +65,36 @@ namespace gb {
                 return distribution(engine);
             };
         }
+
+        /**
+         * This is a convenience method that creates a random number generator function that
+         * generates an integer in the range of the vector indexes.
+         *
+         * <p>If vector is empty, behavior is undefined. Don't call with an empty vector!
+         *
+         * @tparam TItem The item type.
+         * @param vector The vector from which to get the index range.
+         * @return A function that generates random numbers in the range.
+         */
+        template<typename TItem>
+        std::function<size_t()> createVectorIndexGenerator(std::vector<TItem> const& vector) noexcept {
+            return createIntGenerator<size_t>(0, vector.size() - 1);
+        }
+
+        /**
+         * This is a convenience method to pick a random item from a vector.
+         *
+         * <p>If vector is empty, behavior is undefined. Don't call with an empty vector!
+         *
+         * @tparam TItem The item type.
+         * @param vector The vector from which to pick an item.
+         * @return A reference to the randomly picked item.
+         */
+        template<typename TItem>
+        TItem& pickFromVector(std::vector<TItem>& vector) noexcept {
+            size_t const index { createVectorIndexGenerator(vector)() };
+            return vector[index];
+        }
     };
 
     /**
