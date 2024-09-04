@@ -114,10 +114,20 @@ TEST(Random, randomMt64Float_range) {
 
 TEST(Random, randomItemFromVector) {
     gb::RandomMT64 random;
-    std::vector<std::string> vector { "one", "two", "three", "four" };
-    std::unordered_set<std::string> const values { vector.cbegin(), vector.cend() };
+    std::vector<std::string> items { "one", "two", "three", "four" };
+    std::unordered_set<std::string> const values { items.cbegin(), items.cend() };
     for (int i = 0; i < 100; ++i) {
-        auto const& item { random.pickFromVector(vector) };
+        auto const& item { random.pickFromContainer(items) };
+        ASSERT_TRUE(values.contains(item));
+    }
+}
+
+TEST(Random, randomItemFromSet) {
+    gb::RandomMT64 random;
+    std::set<std::string> items { "one", "two", "three", "four" };
+    std::unordered_set<std::string> const values { items.cbegin(), items.cend() };
+    for (int i = 0; i < 100; ++i) {
+        auto const& item { random.pickFromContainer(items) };
         ASSERT_TRUE(values.contains(item));
     }
 }

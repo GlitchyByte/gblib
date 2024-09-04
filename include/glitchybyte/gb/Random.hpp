@@ -68,32 +68,74 @@ namespace gb {
 
         /**
          * This is a convenience method that creates a random number generator function that
-         * generates an integer in the range of the vector indexes.
+         * generates an integer in the range of the container indexes.
          *
-         * <p>If vector is empty, behavior is undefined. Don't call with an empty vector!
+         * <p>If container is empty, behavior is undefined. Don't call with an empty container!
          *
-         * @tparam TItem The item type.
-         * @param vector The vector from which to get the index range.
+         * @tparam TContainer Container type.
+         * @param container The container from which to get the index range.
          * @return A function that generates random numbers in the range.
          */
-        template<typename TItem>
-        std::function<size_t()> createVectorIndexGenerator(std::vector<TItem> const& vector) noexcept {
-            return createIntGenerator<size_t>(0, vector.size() - 1);
+        template<HasSize TContainer>
+        std::function<size_t()> createContainerIndexGenerator(TContainer const& container) noexcept {
+            return createIntGenerator<size_t>(0, container.size() - 1);
         }
 
         /**
-         * This is a convenience method to pick a random item from a vector.
+         * This is a convenience method to pick a random item from a container.
          *
-         * <p>If vector is empty, behavior is undefined. Don't call with an empty vector!
+         * <p>This template is for non-const default iterator.
          *
-         * @tparam TItem The item type.
-         * @param vector The vector from which to pick an item.
+         * <p>If container is empty, behavior is undefined. Don't call with an empty container!
+         *
+         * @tparam TContainer Container type.
+         * @param container The container from which to pick an item.
+         * @return A reference to the randomly picked item.
+         */
+        template<class TContainer>
+        requires IterableContainer<TContainer> && HasNonConstValueTypeIterator<TContainer>
+        TContainer::value_type& pickFromContainer(TContainer& container) noexcept {
+            size_t const index { createContainerIndexGenerator(container)() };
+            auto it { container.begin() };
+            std::advance(it, index);
+            return *it;
+        }
+
+        /**
+         * This is a convenience method to pick a random item from a container.
+         *
+         * <p>This template is for const default iterator.
+         *
+         * <p>If container is empty, behavior is undefined. Don't call with an empty container!
+         *
+         * @tparam TContainer Container type.
+         * @param container The container from which to pick an item.
+         * @return A reference to the randomly picked item.
+         */
+        template<class TContainer>
+        requires IterableContainer<TContainer> && HasConstValueTypeIterator<TContainer>
+        TContainer::value_type const& pickFromContainer(TContainer& container) noexcept {
+            size_t const index { createContainerIndexGenerator(container)() };
+            auto it { container.begin() };
+            std::advance(it, index);
+            return *it;
+        }
+
+        /**
+         * This is a convenience method to pick a random item from a container.
+         *
+         * <p>This is a vector specialization.
+         *
+         * <p>If container is empty, behavior is undefined. Don't call with an empty container!
+         *
+         * @tparam TItem Item type.
+         * @param container The container from which to pick an item.
          * @return A reference to the randomly picked item.
          */
         template<typename TItem>
-        TItem& pickFromVector(std::vector<TItem>& vector) noexcept {
-            size_t const index { createVectorIndexGenerator(vector)() };
-            return vector[index];
+        TItem& pickFromContainer(std::vector<TItem>& container) noexcept {
+            size_t const index { createContainerIndexGenerator(container)() };
+            return container[index];
         }
     };
 
