@@ -1,7 +1,7 @@
 // Copyright 2024 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
-#include <glitchybyte/gb.h>
+#include <glitchybyte/gb.hpp>
 #include <gtest/gtest.h>
 
 TEST(Strings, createVectorStringViewFromCArray) {

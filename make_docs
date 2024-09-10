@@ -23,6 +23,11 @@ fi
 docker run --rm --platform linux/amd64 -v ${PWD}:/project ghcr.io/doxygen/doxygen:release_1_12_0 -x /project/Doxyfile
 docker run --rm --platform linux/amd64 -v ${PWD}:/project ghcr.io/doxygen/doxygen:release_1_12_0 /project/Doxyfile
 
+#  OUTPUT_DIRECTORY="/project/docs" \
+#  INPUT="/project/README.md /project/include/glitchybyte/gb" \
+#  EXCLUDE="/project/include/glitchybyte/gb/external" \
+#  USE_MDFILE_AS_MAINPAGE="/project/README.md"
+
 # [Teardown]
 cd "${calling_dir}"
 

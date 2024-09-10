@@ -202,6 +202,7 @@ namespace gb::strings {
      *
      * @tparam T The type of item.
      * @param vector Vector of items to join.
+     * @param separator Separator between items.
      * @return A joined string of all items.
      */
     template <typename T>
@@ -259,6 +260,11 @@ namespace gb::strings {
      */
     class StringNumberParseException : public std::runtime_error {
     public:
+        /**
+         * Creates an exception with a message.
+         *
+         * @param attempted Includes the attempted string in the message.
+         */
         explicit StringNumberParseException(std::string_view const attempted) :
             std::runtime_error(std::format("{}: string: \"{}\"", __func__, attempted)) {}
     };
@@ -289,10 +295,10 @@ namespace gb::strings {
     /**
      * Converts a string to its number value representation.
      *
-     * @tparam T An integral type.
+     * @tparam T A numeric type.
      * @param str A string.
      * @return The parsed number value.
-     * @throws StringNumberParseException if the string can't be parsed to an integral value.
+     * @throws StringNumberParseException if the string can't be parsed to a numeric value.
      */
     template<std::integral T>
     [[nodiscard]]
@@ -309,10 +315,10 @@ namespace gb::strings {
     /**
      * Converts a string to its number value representation.
      *
-     * @tparam T A floating point type.
+     * @tparam T A numeric type.
      * @param str A string.
      * @return The parsed number value.
-     * @throws StringNumberParseException if the string can't be parsed to a floating point value.
+     * @throws StringNumberParseException if the string can't be parsed to a numeric value.
      */
     template<std::floating_point T>
     [[nodiscard]]

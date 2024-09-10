@@ -4,3 +4,6 @@
 
 # Output.
 /out/
+
+# Documentation is created on-demand on GitHub.
+/docs/

@@ -2,10 +2,8 @@
 
 ### **WORK IN PROGRESS** - **WORK IN PROGRESS** - **WORK IN PROGRESS**
 
-![Version](https://img.shields.io/badge/Version-0.2.0-blue)
+![Version](https://img.shields.io/badge/Version-0.2.1-blue)
 ![Version](https://img.shields.io/badge/20-white?logo=cplusplus&logoColor=00599C)
-
-Converting embedded gblib I was using in other projects to a header-only library.
 
 ## Include it in your project
 
@@ -33,6 +31,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE gblib)
 target_link_libraries(${PROJECT_NAME} INTERFACE gblib)
 ```
 In your code:
-```c++
-#include <glitchybyte/gb.h>
+```cpp
+#include <glitchybyte/gb.hpp>
 ```
