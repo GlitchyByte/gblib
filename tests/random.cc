@@ -1,7 +1,7 @@
 // Copyright 2024 GlitchyByte
 // SPDX-License-Identifier: Apache-2.0
 
-#include <glitchybyte/gb.hpp>
+#include <glitchybyte/gb/gb.hpp>
 #include <gtest/gtest.h>
 
 TEST(Random, randomInt) {
