@@ -28,16 +28,10 @@ jobs:
           sed 's/\/project\///g' Doxyfile > Doxyfile.local
           doxygen Doxyfile.local
 
-      - name: Test ls
-        run: |
-          ls -l
-          ls -l docs/
-          ls -l docs/html/
+      - name: Prepare Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/html
 
-#      - name: Prepare Pages
-#        uses: actions/upload-pages-artifact@v3
-#        with:
-#          path: docs/html
-#
-#      - name: Deploy Pages
-#        uses: actions/deploy-pages@v4
+      - name: Deploy Pages
+        uses: actions/deploy-pages@v4
