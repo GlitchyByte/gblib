@@ -5,9 +5,13 @@
 ![Version](https://img.shields.io/badge/Version-0.2.1-blue)
 ![Version](https://img.shields.io/badge/20-white?logo=cplusplus&logoColor=00599C)
 
+## Check the documentation
+
+[Read the docs](https://glitchybyte.github.io/gblib/).
+
 ## Include it in your project
 
-You can simply copy the `include/glitchybyte` directory into your project.
+You can simply copy `include/glitchybyte` directory into your project.
 Or you can include it remotely with *FetchContent*.
 
 Include in your `CMakeLists.txt`:
