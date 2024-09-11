@@ -36,5 +36,5 @@ target_link_libraries(${PROJECT_NAME} INTERFACE gblib)
 ```
 In your code:
 ```cpp
-#include <glitchybyte/gb.hpp>
+#include <glitchybyte/gb/gb.hpp>
 ```
