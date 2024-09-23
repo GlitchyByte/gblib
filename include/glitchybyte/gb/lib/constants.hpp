@@ -30,6 +30,7 @@ namespace gb {
         typename TContainer::value_type;
         typename TContainer::iterator;
         typename TContainer::const_iterator;
+        std::is_same_v<typename std::iterator_traits<typename TContainer::iterator>::value_type, typename TContainer::value_type>;
         { tContainer.begin() } -> std::input_iterator;
     };
 
@@ -46,5 +47,14 @@ namespace gb {
     };
 
     template<class TContainer>
+    concept HasIndexOperator = requires(TContainer tContainer, size_t index) {
+        typename TContainer::value_type;
+        { tContainer[index] } -> std::same_as<typename TContainer::value_type&>;
+    };
+
+    template<class TContainer>
     concept IterableContainer = HasSize<TContainer> && HasIterator<TContainer>;
+
+    template<class TContainer>
+    concept IndexableContainer = HasSize<TContainer> && HasIndexOperator<TContainer>;
 }

@@ -131,3 +131,71 @@ TEST(Random, randomItemFromSet) {
         ASSERT_TRUE(values.contains(item));
     }
 }
+
+TEST(Random, randomPickIndexFromWeightedProbability) {
+    gb::RandomMT64 random;
+    std::vector<std::string> items { "one", "two", "three", "four" };
+    std::unordered_set<std::string> const values { items.cbegin(), items.cend() };
+    int wps[] { 27, 9, 3, 1 };
+    uint one { 0 };
+    uint two { 0 };
+    uint three { 0 };
+    uint four { 0 };
+    for (int i = 0; i < 1000; ++i) {
+        auto const index { random.pickIndexFromWeightedProbability(wps) };
+        switch (index) {
+            case 0:
+                ++one;
+                break;
+            case 1:
+                ++two;
+                break;
+            case 2:
+                ++three;
+                break;
+            case 3:
+                ++four;
+                break;
+            default:
+                FAIL();
+        }
+    }
+    ASSERT_GT(one, two);
+    ASSERT_GT(two, three);
+    ASSERT_GT(three, four);
+    ASSERT_GT(four, 0);
+}
+
+TEST(Random, randomPickIndexFromNormalizedWeightedProbability) {
+    gb::RandomMT64 random;
+    std::vector<std::string> items { "one", "two", "three", "four" };
+    std::unordered_set<std::string> const values { items.cbegin(), items.cend() };
+    int wps[] { 9, 3, 0, -2 };
+    uint one { 0 };
+    uint two { 0 };
+    uint three { 0 };
+    uint four { 0 };
+    for (int i = 0; i < 1000; ++i) {
+        auto const index { random.pickIndexFromNormalizedWeightedProbability(wps) };
+        switch (index) {
+            case 0:
+                ++one;
+                break;
+            case 1:
+                ++two;
+                break;
+            case 2:
+                ++three;
+                break;
+            case 3:
+                ++four;
+                break;
+            default:
+                FAIL();
+        }
+    }
+    ASSERT_GT(one, two);
+    ASSERT_GT(two, three);
+    ASSERT_GT(three, four);
+    ASSERT_GT(four, 0);
+}
