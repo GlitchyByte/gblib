@@ -2,7 +2,7 @@
 
 ### **WORK IN PROGRESS** - **WORK IN PROGRESS** - **WORK IN PROGRESS**
 
-![Version](https://img.shields.io/badge/Version-0.3.0-blue)
+![Version](https://img.shields.io/badge/Version-0.3.1-blue)
 ![Version](https://img.shields.io/badge/20-white?logo=cplusplus&logoColor=00599C)
 
 ## Check the documentation
